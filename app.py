@@ -6,6 +6,7 @@ import plotly.graph_objs as go
 import numpy as np
 import pandas as pd
 import datetime as dt
+from pathlib import Path
 
 
 
@@ -21,8 +22,14 @@ app.config.suppress_callback_exceptions = True
 
 # Load data from csv
 def load_data():
-    # To do: Completar la función 
-    
+    # La ruta se arma desde la ubicación de este archivo, no desde el directorio
+    # en que se lance, para que funcione igual en la máquina local y en la nube.
+    ruta = Path(__file__).resolve().parent / "datos_energia.csv"
+    df = pd.read_csv(ruta)
+    # La columna de fecha debe ser datetime y servir de índice del DataFrame.
+    df["time"] = pd.to_datetime(df["time"])
+    df = df.set_index("time")
+    return df
 
 # Cargar datos
 data = load_data()
